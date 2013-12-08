@@ -1,18 +1,15 @@
 FROM stackbrew/debian:jessie
-ENV ARCH amd64
-ENV DIST wheezy
-ENV MIRROR http://ftp.nl.debian.org
 RUN apt-get -q update
-RUN apt-get -qy install dnsmasq wget iptables
+RUN apt-get -qy install dnsmasq wget iptables syslinux-common xorriso
 RUN wget --no-check-certificate https://raw.github.com/jpetazzo/pipework/master/pipework
 RUN chmod +x pipework
 RUN mkdir /tftp
 WORKDIR /tftp
-RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/debian-installer/$ARCH/linux
-RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/debian-installer/$ARCH/initrd.gz
-RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/debian-installer/$ARCH/pxelinux.0
+RUN cp /usr/lib/syslinux/pxelinux.0 .
+RUN wget --no-check-certificate https://github.com/steeve/boot2docker/releases/download/v0.2/boot2docker.iso
+RUN osirrox -indev boot2docker.iso -extract /boot /tftp
 RUN mkdir pxelinux.cfg
-RUN printf "DEFAULT linux\nKERNEL linux\nAPPEND initrd=initrd.gz\n" >pxelinux.cfg/default
+RUN printf "DEFAULT linux\nLABEL linux\nKERNEL vmlinuz64\nAPPEND initrd=initrd.gz user=docker\n" >pxelinux.cfg/default
 CMD \
     echo Setting up iptables... &&\
     iptables -t nat -A POSTROUTING -j MASQUERADE &&\
