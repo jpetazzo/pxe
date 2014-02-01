@@ -17,6 +17,68 @@ pre-configured to serve a Debian netinstall kernel and initrd.
    Alternatively, you can put VMs on `br0` and achieve the same result.
 
 
+### Why and how do we move eth0 IP address to br0?
+
+The Linux network stack has the notion of master and slave interfaces.
+They are used in many places, including bridges and bonding (when
+multiple physical interfaces are grouped together to form a single
+logical link, for increased throughput or reliability). When using
+Linux bridges, the bridge is the master interface, and all the ports
+of the bridge are slave interfaces.
+
+Now is the tricky part: with interfaces like bridges and bonding
+groups, only the master should have IP addresses; not the slaves.
+If an IP address is configured on a slave interface, it will misbehave
+in seemingly random ways. For instance, it can stop working if
+the interface is down (but the master interface is still up).
+Or it might handle some protocols like ARP only for packets
+inbound on this interface.
+
+Therefore, when changing the configuration of an existing interface
+to place it inside a bridge (or bonding group), you should
+deconfigure its IP address, and assign it to the master interface
+instead. I recommend the following steps:
+
+1. Check the IP address of the interface (with e.g. `ip addr ls eth0`).
+   Carefully note the IP address *and its subnet mask*, e.g.
+   192.168.1.4/24. There can be multiple addresses; in that case,
+   note all of them.
+2. Check if there are special routes going through that interface.
+   Chances are, that there is a default route, and you will have to
+   take care of it; otherwise you will lose internet connectivity.
+   The easiest way is to do `ip route ls dev eth0`. You will almost
+   certainly see an entry with `proto kernel scope link`, which
+   is the automatic entry corresponding to the subnet directly
+   connected to this interface. You can ignore this one. However,
+   if you see something like `default via 192.168.1.1`, note it.
+3. Deconfigure the IP address. In that case, we would do
+   `ip addr del 192.168.1.4/24 dev eth0`. You don't havea to
+   deconfigure the routes: they will be automatically removed
+   as the address is withdrawn.
+4. Configure the IP address on the bridge. In our example, that would
+   be `ip addr add 192.168.1.4/24 dev br0`.
+5. Last but not least, re-add the routes on the bridge. Here, we
+   would do `ip route add default via 192.168.1.1`.
+
+If you want to do that automatically at boot, you can do it through
+the `/etc/network/interfaces` file (on Debian/Ubuntu). 
+
+It will look like this (assuming the same IP addresses than our
+previous example):
+
+```
+auto br0
+iface br0 inet static
+      address 192.168.1.4
+      netmask 255.255.255.0
+      bridge_ports eth0
+      bridge_stp off
+      bridge_fd 0
+```
+
+Don't forget to disable the section related to `eth0` then!
+
+
 ## I want to netboot something else!
 
 Left as an exercise for the reader. Check the Dockerfile and rebuild;
