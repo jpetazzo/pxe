@@ -18,10 +18,12 @@ CMD \
     iptables -t nat -A POSTROUTING -j MASQUERADE &&\
     echo Waiting for pipework to give us the eth1 interface... &&\
     /pipework --wait &&\
+    myIP=$(ip addr show dev eth1 | awk -F '[ /]+' '/global/ {print $3}') &&\
+    mySUBNET=$(echo $myIP | cut -d '.' -f 1,2,3) &&\
     echo Starting DHCP+TFTP server...&&\
     dnsmasq --interface=eth1 \
-    	    --dhcp-range=192.168.242.2,192.168.242.99,255.255.255.0,1h \
-	    --dhcp-boot=pxelinux.0,pxeserver,192.168.242.1 \
+    	    --dhcp-range=$mySUBNET.101,$mySUBNET.199,255.255.255.0,1h \
+	    --dhcp-boot=pxelinux.0,pxeserver,$myIP \
 	    --pxe-service=x86PC,"Install Linux",pxelinux \
 	    --enable-tftp --tftp-root=/tftp/ --no-daemon
 # Let's be honest: I don't know if the --pxe-service option is necessary.

@@ -87,10 +87,14 @@ Don't forget to disable the section related to `eth0` then!
 Left as an exercise for the reader. Check the Dockerfile and rebuild;
 it should be easy enough.
 
+If you want to boot coreOS, check out [avlis/pxe_coreos](https://github.com/avlis/pxe_coreos)
 
 ## Can I change the IP address, 192.168.242.1...?
 
-Yes, if you also change it in the Dockerfile.
+Yes. Be aware that the DHCP server on this container will offer IPs from 101 to 199 on the same /24 subnet. 
+So make sure that the IP you give to the container via pipework does not clash with that.
+Also make sure that there are no other hosts on that bridge within that range. 
+Otherwise, change it in the Dockerfile, check the line that says --dhcp-range=(...).
 
 
 ## Can I *not* use pipework?
