@@ -8,7 +8,7 @@ pre-configured to serve a Debian netinstall kernel and initrd.
 1. Of course you need Docker first!
 1. Clone this repo and `cd` into the repo checkout.
 1. Build the container with `docker build -t pxe .`
-1. Run the container with `PXECID=$(docker run -d pxe)`
+1. Run the container with `PXECID=$(docker run --cap-add NET_ADMIN -d pxe)`
 1. Give it an extra network interface with `./pipework br0 $PXECID 192.168.242.1/24`
 1. Put the network interface connected to your machines on the same bridge
    with e.g. `brctl addif br0 eth0` (don't forget to move `eth0` IP address
