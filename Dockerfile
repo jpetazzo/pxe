@@ -12,7 +12,7 @@ RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/
 RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/debian-installer/$ARCH/initrd.gz
 RUN wget $MIRROR/debian/dists/$DIST/main/installer-$ARCH/current/images/netboot/debian-installer/$ARCH/pxelinux.0
 RUN mkdir pxelinux.cfg
-RUN printf "DEFAULT linux\nKERNEL linux\nAPPEND initrd=initrd.gz\n" >pxelinux.cfg/default
+RUN printf "DEFAULT linux\nLABEL linux\nKERNEL linux\nAPPEND initrd=initrd.gz\n" >pxelinux.cfg/default
 CMD \
     echo Setting up iptables... &&\
     iptables -t nat -A POSTROUTING -j MASQUERADE &&\
