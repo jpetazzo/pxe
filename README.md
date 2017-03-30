@@ -123,3 +123,14 @@ Let's have a game!
 1. The QEMU VM will netboot from the PXE container. Install Debian.
 1. Reboot the physical machine -- it now boots on Debian. 
 1. Repeat steps but install Windows for trolling purposes.
+
+
+## Did anyone make something useful with this?
+
+Yes!
+
+- @dreamcat4 used this as inspiration for a bunch of [pxe images](
+  https://github.com/dreamcat4/docker-images/tree/master/pxe)
+- _________ (insert your name here, by submitting a PR to this
+  README file! ;-))
+
