@@ -97,7 +97,8 @@ to use host networking (i.e. `--net host`) since this recipe was
 written before host networking was available. Meanwhile, if
 you have strange symptoms (like, some things ping and some don't)
 you might have to disable bridge netfilter filtering. Please look
-at issue #17 for more details.
+at issue [#17](https://github.com/jpetazzo/pxe/issues/17) for
+more details.
 
 
 ## Can I change the IP address, 192.168.242.1...?
