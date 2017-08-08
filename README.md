@@ -89,6 +89,17 @@ it should be easy enough.
 
 If you want to boot coreOS, check out [avlis/pxe_coreos](https://github.com/avlis/pxe_coreos)
 
+
+## It doesn't work!
+
+That's unfortunate. You should probably adapt these instructions
+to use host networking (i.e. `--net host`) since this recipe was
+written before host networking was available. Meanwhile, if
+you have strange symptoms (like, some things ping and some don't)
+you might have to disable bridge netfilter filtering. Please look
+at issue #17 for more details.
+
+
 ## Can I change the IP address, 192.168.242.1...?
 
 Yes. Be aware that the DHCP server on this container will offer IPs from 101 to 199 on the same /24 subnet. 
