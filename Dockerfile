@@ -1,6 +1,6 @@
 FROM stackbrew/debian:jessie
 ENV ARCH amd64
-ENV DIST wheezy
+ENV DIST stretch
 ENV MIRROR http://ftp.nl.debian.org
 RUN apt-get -q update
 RUN apt-get -qy install dnsmasq wget iptables
