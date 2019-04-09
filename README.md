@@ -143,6 +143,8 @@ Yes!
 
 - @dreamcat4 used this as inspiration for a bunch of [pxe images](
   https://github.com/dreamcat4/docker-images/tree/master/pxe)
+- @kkredit used this as the basis for a CI setup tied to Jenkins and multiple
+  hardware targets
 - _________ (insert your name here, by submitting a PR to this
   README file! ;-))
 
